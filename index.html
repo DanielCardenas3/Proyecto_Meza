@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard SR-AC - Sistema de Resolución Asíncrona basado en Confianza</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Paleta profesional moderna - Azul corporativo principal */
+            --primary-blue: #1E3A8A;      /* Azul profundo profesional */
+            --primary-blue-light: #3B82F6; /* Azul claro para acentos */
+            --primary-blue-lighter: #DBEAFE;
+            
+            /* Verde éxito optimizado */
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            
+            /* Amarillo warning suave */
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            
+            /* Rojo danger controlado */
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+            
+            /* Grises profesionales */
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-700: #334155;
+            --gray-900: #0F172A;
+            
+            /* Amarillo Mercado Libre sutil */
+            --ml-accent: #FCD34D;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #F1F5F9;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Header refinado */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-left h1 {
+            color: #F1F5F9;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #3B82F6, #10B981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-left p {
+            color: #94A3B8;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .time-display {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #BFDBFE;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            font-weight: 500;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.5);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Navigation Tabs mejorados */
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-btn {
+            padding: 14px 28px;
+            border: none;
+            background: rgba(30, 58, 138, 0.3);
+            color: #CBD5E1;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .tab-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: #F1F5F9;
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Alert Banner premium */
+        .alert-banner {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-banner.show { display: flex; }
+
+        .alert-banner.warning {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.4);
+        }
+
+        .alert-banner.success {
+            background: linear-gradient(135deg, #10B981, #059669);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Tab Content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* KPI Cards profesionales */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue-light), var(--ml-accent));
+        }
+
+        .kpi-card.success::before { background: linear-gradient(90deg, var(--success), #34D399); }
+        .kpi-card.warning::before { background: linear-gradient(90deg, var(--warning), #FBBF24); }
+        .kpi-card.danger::before { background: linear-gradient(90deg, var(--danger), #F87171); }
+
+        .kpi-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.4);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .kpi-title {
+            font-size: 14px;
+            color: #94A3B8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .kpi-status {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        }
+
+        .kpi-status.warning { background: var(--warning); }
+        .kpi-status.danger { background: var(--danger); }
+
+        .kpi-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: #F1F5F9;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #F1F5F9, #E2E8F0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .kpi-change {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .kpi-change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .kpi-subtitle {
+            font-size: 14px;
+            color: #94A3B8;
+            margin-top: 16px;
+            font-weight: 500;
+        }
+
+        /* Charts modernos */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #F1F5F9;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 350px;
+        }
+
+        /* Process Flow elegante */
+        .process-flow {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            margin-bottom: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 28px;
+            color: #60A5FA;
+            font-weight: 300;
+        }
+
+        .flow-step:last-child::after { display: none; }
+
+        .step-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+            font-weight: 800;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .step-circle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.6);
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #F1F5F9;
+            margin-bottom: 8px;
+        }
+
+        .step-metric {
+            font-size: 24px;
+            font-weight: 800;
+            color: #3B82F6;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        /* Tabla profesional */
+        .metrics-table {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .metrics-table table { width: 100%; border-collapse: collapse; }
+
+        .metrics-table th {
+            background: rgba(30, 58, 138, 0.8);
+            padding: 20px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 700;
+            color: #F1F5F9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .metrics-table td {
+            padding: 20px;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+            font-size: 15px;
+            color: #E2E8F0;
+        }
+
+        .metrics-table tr:hover td {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 2px solid;
+        }
+
+        .status-badge.optimal {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .status-badge.attention {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .status-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* Animaciones de tiempo real */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #10B981;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 20px; }
+            .kpi-grid, .chart-grid { grid-template-columns: 1fr; }
+            .flow-steps { flex-direction: column; }
+            .flow-step::after {
+                content: '↓';
+                right: auto;
+                top: auto;
+                bottom: -35px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .nav-tabs { overflow-x: auto; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Dashboard SR-AC • Mercado Libre</h1>
+                <p><span class="live-indicator"></span>Sistema de Resolución Asíncrona basado en Confianza | Monitoreo en Tiempo Real</p>
+            </div>
+            <div class="header-right">
+                <div class="time-display" id="currentTime"></div>
+                <button class="refresh-btn" onclick="refreshAllData()">⟳ Actualizar Datos</button>
+            </div>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert-banner" id="alertBanner">
+            <span id="alertMessage"></span>
+            <button onclick="closeAlert()" style="background: none; border: none; color: white; cursor: pointer; font-size: 24px; font-weight: 700;">✕</button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('overview')">📊 Vista General</button>
+            <button class="tab-btn" onclick="showTab('financial')">💰 Financiera</button>
+            <button class="tab-btn" onclick="showTab('customer')">👥 Cliente</button>
+            <button class="tab-btn" onclick="showTab('process')">⚙️ Procesos</button>
+            <button class="tab-btn" onclick="showTab('learning')">🧠 Aprendizaje</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div class="tab-content active" id="overview">
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Tasa de Recompra Post-Devolución (TRPD)</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value" id="trpd">74.3<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">
+                        ↑ +4.3% vs mes anterior
+                    </div>
+                    <div class="kpi-subtitle">Meta: >70% | Estado: <strong>ÓPTIMO</strong></div>
+                </div>
+
+                <div class="kpi-card warning">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Costo de Riesgo de Fidelización (CRF)</span>
+                        <div class="kpi-status warning"></div>
+                    </div>
+                    <div class="kpi-value" id="crf">0.042<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">
+                        ↑ +0.007% vs mes anterior
+                    </div>
+                    <div class="kpi-subtitle">Meta: <0.05% | Estado: <strong>ATENCIÓN</strong></div>
+                </div>
+
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Precisión del Modelo (PMC)</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value" id="pmc">99.84<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">
+                        ↑ +0.04% vs mes anterior
+                    </div>
+                    <div class="kpi-subtitle">Meta: >99.8% | Estado: <strong>ÓPTIMO</strong></div>
+                </div>
+
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Tasa de Desacoplamiento (TD)</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value" id="td">98.6<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">
+                        ↑ +0.4% vs mes anterior
+                    </div>
+                    <div class="kpi-subtitle">Meta: >98% | Estado: <strong>ÓPTIMO</strong></div>
+                </div>
+            </div>
+
+            <!-- Process Flow -->
+            <div class="process-flow">
+                <h2 class="chart-title">🔄 Flujo del Proceso SR-AC</h2>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-circle">1</div>
+                        <div class="step-title">Primer Escaneo</div>
+                        <div class="step-metric" id="step1-time">2.3s</div>
+                        <div class="step-label">Tiempo Promedio</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-circle">2</div>
+                        <div class="step-title">Decisión IA</div>
+                        <div class="step-metric" id="step2-time">187ms</div>
+                        <div class="step-label">Latencia Promedio</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-circle">3</div>
+                        <div class="step-title">Reembolso</div>
+                        <div class="step-metric" id="step3-time">4.7min</div>
+                        <div class="step-label">Tiempo Promedio</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-circle">4</div>
+                        <div class="step-title">Validación Física</div>
+                        <div class="step-metric" id="step4-time">8.2d</div>
+                        <div class="step-label">Ciclo Logístico</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">📈 Evolución TRPD vs CRF (12 Meses)</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="trpdCrfChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">⏱️ Tiempo Reembolso: As-Is vs To-Be</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="timeComparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Tab -->
+        <div class="tab-content" id="financial">
+            <div class="kpi-grid">
+                <div class="kpi-card warning">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Costo de Riesgo de Fidelización (CRF)</span>
+                        <div class="kpi-status warning"></div>
+                    </div>
+                    <div class="kpi-value">$2.1<span style="font-size: 24px; opacity: 0.7;">M</span></div>
+                    <div class="kpi-change">↑ +$150K vs mes anterior</div>
+                    <div class="kpi-subtitle">Del total de ventas brutas: 0.042%</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Ahorro en Costos CX</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">$5.8<span style="font-size: 24px; opacity: 0.7;">M</span></div>
+                    <div class="kpi-change negative">↓ -67% vs modelo anterior</div>
+                    <div class="kpi-subtitle">Reducción 15,400 tickets/mes</div>
+                </div>
+                <div
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">CPU Logística Inversa</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">$4.20<span style="font-size: 24px; opacity: 0.7;">/unidad</span></div>
+                    <div class="kpi-change negative">↓ -$1.80 vs modelo anterior</div>
+                    <div class="kpi-subtitle">Optimización rutas asíncronas</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">ROI de la Confianza</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">276<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">Beneficio neto: $3.7M/mes</div>
+                    <div class="kpi-subtitle">Ahorro CX + TRPD - CRF</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">💸 Distribución Costos: Anterior vs SR-AC</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="costDistributionChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">📊 ROI Mensual Acumulado</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="roiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Tab -->
+        <div class="tab-content" id="customer">
+            <div class="kpi-grid">
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">TRPD - Alta Confianza</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">78.4<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +5.1% vs mes anterior</div>
+                </div>
+                <div class="kpi-card warning">
+                    <div class="kpi-header">
+                        <span class="kpi-title">TRPD - Confianza Estándar</span>
+                        <div class="kpi-status warning"></div>
+                    </div>
+                    <div class="kpi-value">52.3<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +1.2% vs mes anterior</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Tiempo Promedio Reembolso</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">4.7<span style="font-size: 24px; opacity: 0.7;">min</span></div>
+                    <div class="kpi-change negative">↓ De 8.3 días a minutos</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">CSAT Devoluciones</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">94.2<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +18.5% vs modelo anterior</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">👥 Segmentación por Nivel Confianza</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="segmentationChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">⭐ Evolución CSAT por Segmento</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="csatEvolutionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Process Tab -->
+        <div class="tab-content" id="process">
+            <div class="kpi-grid">
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Tasa de Desacoplamiento (TD)</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">98.6<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +0.4% vs mes anterior</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">TCLI Logístico Inverso</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">8.2<span style="font-size: 24px; opacity: 0.7;">días</span></div>
+                    <div class="kpi-change">Dentro SLA (<15 días)</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Tasa Adopción 1er Escaneo</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">97.8<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +1.2% vs mes anterior</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Tickets CX/Devolución</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">0.08</div>
+                    <div class="kpi-change negative">↓ -0.73 vs modelo anterior</div>
+                </div>
+            </div>
+
+            <div class="metrics-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Punto Control Crítico</th>
+                            <th>Métrica</th>
+                            <th>Valor Actual</th>
+                            <th>Umbral</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Primer Escaneo</td>
+                            <td>TAPE</td>
+                            <td>97.8%</td>
+                            <td>>95%</td>
+                            <td><span class="status-badge optimal">Óptimo</span></td>
+                            <td>Ninguna</td>
+                        </tr>
+                        <tr>
+                            <td>Decisión Algorítmica</td>
+                            <td>PMC</td>
+                            <td>99.84%</td>
+                            <td>>99.5%</td>
+                            <td><span class="status-badge optimal">Óptimo</span></td>
+                            <td>Ninguna</td>
+                        </tr>
+                        <tr>
+                            <td>Latencia Sistema</td>
+                            <td>Tiempo Decisión</td>
+                            <td>187ms</td>
+                            <td>&lt;200ms</td>
+                            <td><span class="status-badge optimal">Óptimo</span></td>
+                            <td>Ninguna</td>
+                        </tr>
+                        <tr>
+                            <td>Ciclo Logístico</td>
+                            <td>TCLI</td>
+                            <td>8.2 días</td>
+                            <td>&lt;15 días</td>
+                            <td><span class="status-badge optimal">Óptimo</span></td>
+                            <td>Ninguna</td>
+                        </tr>
+                        <tr>
+                            <td>Riesgo Financiero</td>
+                            <td>CRF</td>
+                            <td>0.042%</td>
+                            <td>&lt;0.05%</td>
+                            <td><span class="status-badge attention">Atención</span></td>
+                            <td>Monitorear fraude</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-container" style="margin-top: 30px;">
+                <h3 class="chart-title">⏱️ Distribución Tiempos Flujo SR-AC</h3>
+                <div class="chart-wrapper">
+                    <canvas id="processTimingChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Tab -->
+        <div class="tab-content" id="learning">
+            <div class="kpi-grid">
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Precisión del Modelo (PMC)</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">99.84<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +0.04% últimos 30 días</div>
+                    <div class="kpi-subtitle">Predicciones bajo riesgo</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Umbral Confianza Dinámico</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">0.95</div>
+                    <div class="kpi-change">↓ -0.01 (expansión)</div>
+                    <div class="kpi-subtitle">Score mínimo reembolso instantáneo</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Análisis Causa Raíz</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">87.3<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +12.3% transformación CX</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Cobertura SR-AC</span>
+                        <div class="kpi-status"></div>
+                    </div>
+                    <div class="kpi-value">68.4<span style="font-size: 24px; opacity: 0.7;">%</span></div>
+                    <div class="kpi-change">↑ +3.2% expansión base</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">🧠 Evolución UCD y Cobertura</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="ucdEvolutionChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">❌ Falsos Positivos/Negativos</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="errorDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">🔄 Ciclo SECI Conocimiento</h3>
+                <div class="chart-wrapper">
+                    <canvas id="seciCycleChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============== DATA SIMULATION AVANZADA ==============
+        const dashboardData = {
+            overview: { trpd: 74.3, crf: 0.042, pmc: 99.84, td: 98.6 },
+            financial: { crfAmount: 2.1, cxSavings: 5.8, cpuLI: 4.20, roi: 276 },
+            customer: { trpdHigh: 78.4, trpdStandard: 52.3, tpr: 4.7, csat: 94.2 },
+            process: { td: 98.6, tcli: 8.2, tape: 97.8, ticketsPerReturn: 0.08 },
+            learning: { pmc: 99.84, ucd: 0.95, rootCauseRate: 87.3, coverage: 68.4 },
+            processTimes: ['2.3s', '187ms', '4.7min', '8.2d']
+        };
+
+        let chartInstances = {};
+
+        // ============== INITIALIZATION ==============
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            initializeAllCharts();
+            checkAlerts();
+            startLiveUpdates();
+        });
+
+        // ============== TIEMPO REAL ==============
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            };
+            document.getElementById('currentTime').textContent = 
+                now.toLocaleDateString('es-PE', options);
+        }
+
+        // ============== NAVEGACIÓN TABS ==============
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ============== ALERTAS INTELIGENTES ==============
+        function checkAlerts() {
+            const alerts = [];
+            if (dashboardData.overview.crf > 0.04) {
+                alerts.push({ type: 'warning', message: '⚠️ CRF cerca del umbral máximo (0.05%). Ajustar UCD.' });
+            }
+            if (dashboardData.learning.pmc < 99.5) {
+                alerts.push({ type: 'danger', message: '🚨 Precisión modelo <99.5%. Reentrenamiento URGENTE.' });
+            }
+            if (dashboardData.process.tape < 95) {
+                alerts.push({ type: 'warning', message: '⚠️ TAPE bajo umbral. Revisar infraestructura PD.' });
+            }
+            if (alerts.length > 0) showAlert(alerts[0].type, alerts[0].message);
+        }
+
+        function showAlert(type, message) {
+            const banner = document.getElementById('alertBanner');
+            const messageEl = document.getElementById('alertMessage');
+            banner.className = `alert-banner ${type} show`;
+            messageEl.textContent = message;
+        }
+
+        function closeAlert() {
+            document.getElementById('alertBanner').classList.remove('show');
+        }
+
+        // ============== ACTUALIZACIÓN MANUAL ==============
+        function refreshAllData() {
+            updateAllData();
+            const btn = event.target;
+            btn.textContent = '✓ Actualizado';
+            btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+            setTimeout(() => {
+                btn.textContent = '⟳ Actualizar Datos';
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        // ============== ACTUALIZACIONES TIEMPO REAL ==============
+        function startLiveUpdates() {
+            setInterval(() => {
+                updateAllData(true); // live = true para updates sutiles
+            }, 8000); // Cada 8 segundos
+        }
+
+        function updateAllData(live = false) {
+            // Variaciones realistas
+            const variation = live ? 0.1 : 0.5;
+            
+            dashboardData.overview.trpd += (Math.random() - 0.5) * variation;
+            dashboardData.overview.crf += (Math.random() - 0.5) * 0.001;
+            dashboardData.overview.pmc += (Math.random() - 0.5) * 0.01;
+            
+            // Actualizar displays con animación suave
+            document.getElementById('trpd').innerHTML = 
+                dashboardData.overview.trpd.toFixed(1) + '<span style="font-size: 24px; opacity: 0.7;">%</span>';
+            document.getElementById('crf').innerHTML = 
+                dashboardData.overview.crf.toFixed(3) + '<span style="font-size: 24px; opacity: 0.7;">%</span>';
+            document.getElementById('pmc').innerHTML = 
+                dashboardData.overview.pmc.toFixed(2) + '<span style="font-size: 24px; opacity: 0.7;">%</span>';
+
+            // Actualizar tiempos proceso
+            const times = ['2.3s', '187ms', '4.7min', '8.2d'];
+            document.getElementById('step1-time').textContent = times[0];
+            document.getElementById('step2-time').textContent = times[1];
+            document.getElementById('step3-time').textContent = times[2];
+            document.getElementById('step4-time').textContent = times[3];
+
+            checkAlerts();
+        }
+
+        // ============== CHARTS PROFESIONALES ==============
+        function initializeAllCharts() {
+            // Chart 1: TRPD vs CRF
+            chartInstances.trpdCrf = new Chart(document.getElementById('trpdCrfChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        label: 'TRPD (%)',
+                        data: [52, 55, 58, 61, 64, 67, 69, 71, 72, 73, 74, 74.3],
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        yAxisID: 'y',
+                        borderWidth: 4
+                    }, {
+                        label: 'CRF (%)',
+                        data: [0.065, 0.062, 0.058, 0.055, 0.051, 0.048, 0.045, 0.043, 0.041, 0.040, 0.041, 0.042],
+                        borderColor: '#F59E0B',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        yAxisID: 'y1',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { position: 'left', title: { display: true, text: 'TRPD (%)', color: '#10B981' } },
+                        y1: { position: 'right', title: { display: true, text: 'CRF (%)', color: '#F59E0B' }, grid: { drawOnChartArea: false } }
+                    },
+                    plugins: { legend: { labels: { color: '#F1F5F9', font: { size: 14, weight: '600' } } } }
+                }
+            });
+
+            // Chart 2: Time Comparison
+            chartInstances.timeComp = new Chart(document.getElementById('timeComparisonChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Solicitud', '1er Escaneo', 'Decisión IA', 'Reembolso', 'Validación Física'],
+                    datasets: [{
+                        label: 'Modelo Anterior (días)',
+                        data: [0, 3, 3, 8.3, 8.3],
+                        backgroundColor: 'rgba(239, 68, 68, 0.8)'
+                    }, {
+                        label: 'SR-AC (días)',
+                        data: [0, 0.001, 0.001, 0.003, 8.2],
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Días', color: '#F1F5F9' } } },
+                    plugins: { legend: { labels: { color: '#F1F5F9' } } }
+                }
+            });
+
+            // Chart 3: Cost Distribution
+            chartInstances.costDist = new Chart(document.getElementById('costDistributionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['CRF Riesgo', 'Costos CX', 'Logística', 'Tecnología IA'],
+                    datasets: [{ data: [2.1, 5.8, 4.2, 1.5], backgroundColor: ['#F59E0B', '#3B82F6', '#10B981', '#8B5CF6'] }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#F1F5F9', padding: 20 } },
+                        tooltip: { callbacks: { label: ctx => ctx.label + ': $' + ctx.parsed + 'M' } }
+                    }
+                }
+            });
+
+            // Chart 4: ROI
+            chartInstances.roi = new Chart(document.getElementById('roiChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6'],
+                    datasets: [{
+                        label: 'Ahorro CX', data: [3.2, 4.5, 5.1, 5.5, 5.7, 5.8], backgroundColor: 'rgba(16, 185, 129, 0.8)'
+                    }, {
+                        label: 'TRPD', data: [1.2, 2.1, 2.8, 3.3, 3.6, 3.9], backgroundColor: 'rgba(59, 130, 246, 0.8)'
+                    }, {
+                        label: 'CRF', data: [-1.5, -1.8, -1.9, -2.0, -2.1, -2.1], backgroundColor: 'rgba(239, 68, 68, 0.8)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { stacked: true }, y: { stacked: true, title: { display: true, text: 'Millones USD' } } }
+                }
+            });
+
+            // Resto de charts similares...
+            initializeRemainingCharts();
+        }
+
+        function initializeRemainingCharts() {
+            // Chart 5: Segmentation
+            new Chart(document.getElementById('segmentationChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Alta Confianza', 'Media Confianza', 'Estándar'],
+                    datasets: [{ data: [68.4, 22.1, 9.5], backgroundColor: ['#10B981', '#3B82F6', '#F59E0B'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Chart 6: CSAT Evolution
+            new Chart(document.getElementById('csatEvolutionChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'],
+                    datasets: [{
+                        label: 'Alta Confianza', data: [92, 93, 94, 95, 96, 96.5, 97, 94.2],
+                        borderColor: '#10B981', tension: 0.4
+                    }, {
+                        label: 'Estándar', data: [75, 76, 78, 79, 81, 82, 83, 84],
+                        borderColor: '#3B82F6', tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 70, max: 100 } } }
+            });
+
+            // Chart 7: Process Timing
+            new Chart(document.getElementById('processTimingChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Escaneo', 'IA', 'Reembolso', 'Validación'],
+                    datasets: [{ data: [2.3, 0.187, 4.7, 197], backgroundColor: '#3B82F6' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Chart 8: UCD Evolution
+            new Chart(document.getElementById('ucdEvolutionChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6'],
+                    datasets: [{ label: 'Cobertura (%)', data: [62, 64, 65.2, 66.8, 67.6, 68.4], borderColor: '#10B981', tension: 0.4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Chart 9: Error Distribution
+            new Chart(document.getElementById('errorDistributionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Verdaderos Positivos', 'Falsos Positivos', 'Falsos Negativos'],
+                    datasets: [{ data: [99.84, 0.12, 0.04], backgroundColor: ['#10B981', '#F59E0B', '#EF4444'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Chart 10: SECI Cycle
+            new Chart(document.getElementById('seciCycleChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Socialización', 'Externalización', 'Combinación', 'Internalización'],
+                    datasets: [{ label: 'Madurez (%)', data: [85, 92, 88, 91], borderColor: '#3B82F6', backgroundColor: 'rgba(59, 130, 246, 0.2)' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+</body>
+</html>
