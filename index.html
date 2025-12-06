@@ -13,40 +13,44 @@
         }
 
         :root {
-            /* Paleta profesional moderna - Azul corporativo principal */
-            --primary-blue: #1E3A8A;      /* Azul profundo profesional */
-            --primary-blue-light: #3B82F6; /* Azul claro para acentos */
+            /* 🎨 PALETA CORPORATIVA CLARA - Armonía profesional */
+            --primary-blue: #2563EB;       /* Azul corporativo principal [translate:Azul corporativo principal] */
+            --primary-blue-light: #3B82F6; /* Azul claro para acentos [translate:Azul claro para acentos] */
             --primary-blue-lighter: #DBEAFE;
             
             /* Verde éxito optimizado */
-            --success: #10B981;
+            --success: #059669;
             --success-light: #D1FAE5;
             
-            /* Amarillo warning suave */
-            --warning: #F59E0B;
+            /* Amarillo warning elegante */
+            --warning: #D97706;
             --warning-light: #FEF3C7;
             
             /* Rojo danger controlado */
-            --danger: #EF4444;
+            --danger: #DC2626;
             --danger-light: #FEE2E2;
             
-            /* Grises profesionales */
-            --gray-50: #F8FAFC;
-            --gray-100: #F1F5F9;
-            --gray-200: #E2E8F0;
-            --gray-700: #334155;
-            --gray-900: #0F172A;
+            /* Grises profesionales claros */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
             
             /* Amarillo Mercado Libre sutil */
-            --ml-accent: #FCD34D;
+            --ml-accent: #F59E0B;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
+            /* 🔄 FONDO OSCURO → CLARO CORPORATIVO */
+            background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 50%, #F1F5F9 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #F1F5F9;
+            /* 🔄 TEXTO BLANCO → OSCURO */
+            color: var(--gray-900);
         }
 
         .container {
@@ -54,33 +58,38 @@
             margin: 0 auto;
         }
 
-        /* Header refinado */
+        /* Header refinado - OSCURO → BLANCO */
         .header {
-            background: rgba(15, 23, 42, 0.95);
+            /* 🔄 OSCURO → BLANCO CORPORATIVO */
+            background: var(--white);
             backdrop-filter: blur(20px);
             padding: 30px;
             border-radius: 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            /* 🔄 BORDE AZUL → GRIS SUAVE */
+            border: 1px solid var(--gray-200);
             margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            /* 🔄 SOMBRA OSCURA → SUAVE */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
         }
 
         .header-left h1 {
-            color: #F1F5F9;
+            /* 🔄 TEXTO BLANCO GRADIENTE → OSCURO GRADIENTE */
+            color: var(--gray-900);
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #3B82F6, #10B981);
+            background: linear-gradient(135deg, var(--primary-blue), var(--success));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .header-left p {
-            color: #94A3B8;
+            /* 🔄 GRIS CLARO → GRIS MEDIO */
+            color: var(--gray-600);
             font-size: 16px;
             font-weight: 400;
         }
@@ -92,17 +101,20 @@
         }
 
         .time-display {
-            background: rgba(59, 130, 246, 0.1);
+            /* 🔄 FONDO AZUL OSCURO → AZUL SUAVE */
+            background: var(--primary-blue-lighter);
             padding: 12px 24px;
             border-radius: 12px;
             font-size: 15px;
-            color: #BFDBFE;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            /* 🔄 TEXTO AZUL CLARO → AZUL OSCURO */
+            color: var(--primary-blue);
+            /* 🔄 BORDE → SUAVE */
+            border: 1px solid rgba(37, 99, 235, 0.1);
             font-weight: 500;
         }
 
         .refresh-btn {
-            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
             color: white;
             border: none;
             padding: 14px 28px;
@@ -111,59 +123,66 @@
             font-size: 15px;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
             position: relative;
             overflow: hidden;
         }
 
         .refresh-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
         }
 
         .refresh-btn:active {
             transform: translateY(-1px);
         }
 
-        /* Navigation Tabs mejorados */
+        /* Navigation Tabs mejorados - OSCURO → BLANCO */
         .nav-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-            background: rgba(15, 23, 42, 0.8);
+            /* 🔄 FONDO OSCURO → BLANCO */
+            background: var(--white);
             backdrop-filter: blur(20px);
             padding: 20px;
             border-radius: 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            /* 🔄 BORDE AZUL → GRIS */
+            border: 1px solid var(--gray-200);
+            /* 🔄 SOMBRA → SUAVE */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
         .tab-btn {
             padding: 14px 28px;
             border: none;
-            background: rgba(30, 58, 138, 0.3);
-            color: #CBD5E1;
+            /* 🔄 FONDO AZUL OSCURO → TRANSPARENTE */
+            background: transparent;
+            /* 🔄 TEXTO CLARO → OSCURO */
+            color: var(--gray-700);
             border-radius: 12px;
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
             transition: all 0.3s ease;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            /* 🔄 BORDE → GRIS SUAVE */
+            border: 1px solid var(--gray-200);
         }
 
         .tab-btn:hover {
-            background: rgba(59, 130, 246, 0.2);
-            color: #F1F5F9;
-            border-color: rgba(59, 130, 246, 0.5);
+            /* 🔄 FONDO → AZUL SUAVE */
+            background: var(--primary-blue-lighter);
+            color: var(--primary-blue);
+            border-color: var(--primary-blue);
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
             color: white;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
         }
 
-        /* Alert Banner premium */
+        /* Alert Banner premium - MANTENIDO */
         .alert-banner {
             background: linear-gradient(135deg, #EF4444, #DC2626);
             color: white;
@@ -194,7 +213,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* KPI Cards profesionales */
+        /* KPI Cards profesionales - OSCURAS → BLANCAS */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -203,14 +222,18 @@
         }
 
         .kpi-card {
-            background: rgba(15, 23, 42, 0.8);
+            /* 🔄 FONDO OSCURO → BLANCO */
+            background: var(--white);
             backdrop-filter: blur(20px);
             padding: 30px;
             border-radius: 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            /* 🔄 BORDE AZUL → GRIS */
+            border: 1px solid var(--gray-100);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            /* 🔄 SOMBRA → SUAVE */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
 
         .kpi-card::before {
@@ -229,8 +252,9 @@
 
         .kpi-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.4);
-            border-color: rgba(59, 130, 246, 0.5);
+            /* 🔄 SOMBRA OSCURA → MEDIANA */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: var(--gray-200);
         }
 
         .kpi-header {
@@ -241,8 +265,9 @@
         }
 
         .kpi-title {
+            /* 🔄 GRIS CLARO → MEDIO */
+            color: var(--gray-600);
             font-size: 14px;
-            color: #94A3B8;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -253,21 +278,18 @@
             height: 14px;
             border-radius: 50%;
             background: var(--success);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
         }
 
         .kpi-status.warning { background: var(--warning); }
         .kpi-status.danger { background: var(--danger); }
 
         .kpi-value {
+            /* 🔄 GRADIENTE BLANCO → NEGRO SIMPLE */
             font-size: 48px;
             font-weight: 800;
-            color: #F1F5F9;
+            color: var(--gray-900);
             margin-bottom: 12px;
-            background: linear-gradient(135deg, #F1F5F9, #E2E8F0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .kpi-change {
@@ -278,23 +300,25 @@
             font-weight: 600;
             padding: 8px 16px;
             border-radius: 20px;
-            background: rgba(16, 185, 129, 0.1);
+            /* 🔄 FONDO VERDE OSCURO → CLARO */
+            background: var(--success-light);
             color: var(--success);
         }
 
         .kpi-change.negative {
-            background: rgba(239, 68, 68, 0.1);
+            background: var(--danger-light);
             color: var(--danger);
         }
 
         .kpi-subtitle {
+            /* 🔄 GRIS CLARO → MEDIO */
+            color: var(--gray-600);
             font-size: 14px;
-            color: #94A3B8;
             margin-top: 16px;
             font-weight: 500;
         }
 
-        /* Charts modernos */
+        /* Charts modernos - OSCUROS → BLANCOS */
         .chart-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
@@ -303,21 +327,26 @@
         }
 
         .chart-container {
-            background: rgba(15, 23, 42, 0.8);
+            /* 🔄 FONDO OSCURO → BLANCO */
+            background: var(--white);
             backdrop-filter: blur(20px);
             padding: 30px;
             border-radius: 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            /* 🔄 BORDE → GRIS */
+            border: 1px solid var(--gray-100);
+            /* 🔄 SOMBRA → SUAVE */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
 
         .chart-title {
+            /* 🔄 TEXTO BLANCO → NEGRO */
+            color: var(--gray-900);
             font-size: 20px;
             font-weight: 700;
-            color: #F1F5F9;
             margin-bottom: 25px;
             padding-bottom: 12px;
-            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            /* 🔄 BORDE AZUL → SUAVE */
+            border-bottom: 2px solid var(--primary-blue-lighter);
         }
 
         .chart-wrapper {
@@ -325,15 +354,18 @@
             height: 350px;
         }
 
-        /* Process Flow elegante */
+        /* Process Flow elegante - OSCURO → BLANCO */
         .process-flow {
-            background: rgba(15, 23, 42, 0.8);
+            /* 🔄 FONDO OSCURO → BLANCO */
+            background: var(--white);
             backdrop-filter: blur(20px);
             padding: 35px;
             border-radius: 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            /* 🔄 BORDE → GRIS */
+            border: 1px solid var(--gray-100);
             margin-bottom: 30px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            /* 🔄 SOMBRA → SUAVE */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
 
         .flow-steps {
@@ -356,7 +388,7 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 28px;
-            color: #60A5FA;
+            color: var(--primary-blue);
             font-weight: 300;
         }
 
@@ -385,55 +417,66 @@
         }
 
         .step-title {
+            /* 🔄 TEXTO BLANCO → NEGRO */
+            color: var(--gray-900);
             font-size: 16px;
             font-weight: 700;
-            color: #F1F5F9;
             margin-bottom: 8px;
         }
 
         .step-metric {
+            /* 🔄 FONDO AZUL OSCURO → CLARO */
             font-size: 24px;
             font-weight: 800;
-            color: #3B82F6;
-            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-blue);
+            background: var(--primary-blue-lighter);
             padding: 8px 16px;
             border-radius: 12px;
             display: inline-block;
         }
 
-        /* Tabla profesional */
+        /* Tabla profesional - OSCURA → CLARA */
         .metrics-table {
-            background: rgba(15, 23, 42, 0.8);
+            /* 🔄 FONDO OSCURO → BLANCO */
+            background: var(--white);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            /* 🔄 BORDE → GRIS */
+            border: 1px solid var(--gray-100);
             overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            /* 🔄 SOMBRA → SUAVE */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
 
         .metrics-table table { width: 100%; border-collapse: collapse; }
 
         .metrics-table th {
-            background: rgba(30, 58, 138, 0.8);
+            /* 🔄 FONDO AZUL OSCURO → GRIS CLARO */
+            background: var(--gray-50);
             padding: 20px;
             text-align: left;
             font-size: 14px;
             font-weight: 700;
-            color: #F1F5F9;
+            /* 🔄 TEXTO BLANCO → NEGRO */
+            color: var(--gray-900);
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            /* 🔄 BORDE → GRIS */
+            border-bottom: 2px solid var(--gray-200);
         }
 
         .metrics-table td {
             padding: 20px;
-            border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+            /* 🔄 BORDE → GRIS SUAVE */
+            border-bottom: 1px solid var(--gray-200);
             font-size: 15px;
-            color: #E2E8F0;
+            /* 🔄 TEXTO CLARO → MEDIO */
+            color: var(--gray-700);
         }
 
         .metrics-table tr:hover td {
-            background: rgba(59, 130, 246, 0.1);
+            /* 🔄 HOVER AZUL → GRIS CLARO */
+            background: var(--gray-50);
         }
 
         .status-badge {
@@ -442,25 +485,25 @@
             border-radius: 25px;
             font-size: 13px;
             font-weight: 700;
-            border: 2px solid;
         }
 
         .status-badge.optimal {
-            background: rgba(16, 185, 129, 0.2);
+            /* 🔄 AJUSTE PARA FONDO CLARO */
+            background: rgba(5, 150, 105, 0.1);
             color: var(--success);
-            border-color: var(--success);
+            border: 2px solid var(--success);
         }
 
         .status-badge.attention {
-            background: rgba(245, 158, 11, 0.2);
+            background: rgba(217, 119, 6, 0.1);
             color: var(--warning);
-            border-color: var(--warning);
+            border: 2px solid var(--warning);
         }
 
         .status-badge.critical {
-            background: rgba(239, 68, 68, 0.2);
+            background: rgba(220, 38, 38, 0.1);
             color: var(--danger);
-            border-color: var(--danger);
+            border: 2px solid var(--danger);
         }
 
         /* Animaciones de tiempo real */
